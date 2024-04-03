@@ -1,28 +1,23 @@
 import store from "@store/store";
 import { Windows } from "./types";
 import { setActiveWindow } from "@store/userSlice";
-import initWindow from "@windows/init";
 import { clearTerminal } from "./terminal";
 import { terminal as term } from "terminal-kit";
+import authWindow from "@windows/auth";
+import roomsWindow from "@windows/rooms";
 
 const navigate = (value: Windows) => {
     clearTerminal();
     store.dispatch(setActiveWindow(value));
     switch (value) {
-        case Windows.INIT:
-            initWindow();
-
         case Windows.AUTH:
-            term.red("not defined yet\n");
-
-        case Windows.LOBBY:
-            term.red("not defined yet\n");
-
-        case Windows.GAME:
-            term.red("not defined yet\n");
-
+            authWindow();
+            break;
+        case Windows.ROOMS:
+            roomsWindow();
+            break;
         default:
-            term.red("not defined yet\n");
+            term.red(`window ${Windows[value]} has not been defined yet\n`);
     }
 };
 

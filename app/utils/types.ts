@@ -1,7 +1,7 @@
 enum Windows {
     AUTH,
-    LOBBY,
-    GAME,
+    ROOMS,
+    ROOM,
 }
 
 export { Windows };
