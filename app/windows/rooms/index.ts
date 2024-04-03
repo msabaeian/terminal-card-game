@@ -1,59 +1,57 @@
-import { navigate } from "@utils/navigation";
 import { clearTerminal, errorGaurd } from "@utils/terminal";
-import { Windows } from "@utils/types";
+import { Player, Room } from "@utils/types";
 import { terminal as term } from "terminal-kit";
+import { dispatch } from "@store/store";
+import { setRooms, setSelectedRoom } from "@store/roomsSlice";
+import { ROOMS_MOCK } from "@windows/rooms/mocks";
+import { roomsSelector } from "@store/selectors";
 
 const roomsWindow = () => {
+    // TODO: replace with socket
+    dispatch(setRooms(ROOMS_MOCK));
+    const { rooms } = roomsSelector();
+
     term.yellow("Up/Down: navigate, Enter: open a room, C: create a room, Q/CRTL+C: exit game\n");
-    let items = [
-        {
-            value: 1,
-            key: "Mashte Hossein [2/4]",
-        },
-        {
-            value: 2,
-            key: "Ansari gangzzz [3/4]",
-        },
-        {
-            value: 3,
-            key: "Delroba [1/4]",
-        },
-        {
-            value: -1,
-            key: "Create Room",
-        },
-    ];
 
     term.singleColumnMenu(
-        items.map((item) => item.key),
+        rooms.map((item) => `${item.name} - [${roomPlayerCount(item)}/4]`),
         (error, response) => {
             errorGaurd(error);
-            const selectedOption = items[response.selectedIndex];
-
-            if (selectedOption.value === -1) {
-                clearTerminal();
-                roomsWindow();
-                // return create room
-            }
-
-            openRoom(selectedOption.key);
+            const selectedOption = rooms[response.selectedIndex];
+            dispatch(setSelectedRoom(selectedOption.id));
+            selectTeam();
         },
     );
 };
 
-const openRoom = async (name: string) => {
+const selectTeam = async () => {
     clearTerminal();
-    const loading = await term.spinner();
-    term.hideCursor();
-    term(` Opening room ${name}`);
+    term.yellow("Up/Down: navigate, A/1: select team A, B/2: select team B, C: cancel and back, Q/CRTL+C: exit game\n");
+    term.cyan(`Select your team/seat in room ${"(room name must be here)"}: \n\n`);
+    const { selectedRoom } = roomsSelector();
 
-    // socket with ack, open room
-    setTimeout(() => {
-        term.hideCursor(false);
-        loading.animate(false);
-        clearTerminal();
-        navigate(Windows.ROOMS);
-    }, 2000);
+    term.bgBlue.bold(`Team A:`).bgDefaultColor(` ${renderPlayerName(selectedRoom.team_a[0])} - ${renderPlayerName(selectedRoom.team_a[1])}\n`);
+    term.bgYellow.bold(`Team B:`).bgDefaultColor(` ${renderPlayerName(selectedRoom.team_b[0])} - ${renderPlayerName(selectedRoom.team_b[1])}\n`);
+
+    // const loading = await term.spinner();
+    // term.hideCursor();
+    // term(` Opening room ${name}`);
+
+    // // socket with ack, open room
+    // setTimeout(() => {
+    //     term.hideCursor(false);
+    //     loading.animate(false);
+    //     clearTerminal();
+    //     navigate(Windows.ROOMS);
+    // }, 2000);
+};
+
+const roomPlayerCount = (room: Room): number => {
+    return room.team_a.filter((i) => i !== undefined).length + room.team_b.filter((i) => i !== undefined).length;
+};
+
+const renderPlayerName = (player: Player | undefined) => {
+    return player?.username ?? "[EMPTY]";
 };
 
 export default roomsWindow;
