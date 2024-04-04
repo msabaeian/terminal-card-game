@@ -10,11 +10,11 @@ const terminateTerminal = () => {
     process.exit();
 };
 
-const errorGaurd = (error: any) => {
+const errorGuard = (error: any) => {
     if (error) {
         term.red(`${error}\n`);
         terminateTerminal();
     }
 };
 
-export { clearTerminal, terminateTerminal, errorGaurd };
+export { clearTerminal, terminateTerminal, errorGuard };

@@ -1,13 +1,12 @@
-import { userSelector } from "@store/selectors";
 import store from "@store/store";
-import { setUser } from "@store/userSlice";
+import { setUser } from "@store/user/userSlice";
 import { navigate } from "@utils/navigation";
-import { safeString } from "@utils/string.utils";
-import { clearTerminal, errorGaurd } from "@utils/terminal";
+import { generateUUID, safeString } from "@utils/string.utils";
+import { clearTerminal, errorGuard } from "@utils/terminal";
 import { Windows } from "@utils/types";
 import { readFile, writeFile } from "node:fs";
 import { terminal as term } from "terminal-kit";
-import { v4 as uuidv4 } from "uuid";
+import { userSelector } from "@store/user/selectors";
 
 const authWindow = () => {
     term.green("Welcome to very first version of Mark Dezfuli!\n");
@@ -18,7 +17,7 @@ const confirmUsageOfPreviousUser = () => {
     const { username } = userSelector();
     term.yellow("Found username '%s' do you want to login with this? [y|n]\n", username);
     term.yesOrNo({ yes: ["y", "ENTER"], no: ["n"] }, (error, result) => {
-        errorGaurd(error);
+        errorGuard(error);
         if (result) {
             navigate(Windows.ROOMS);
         } else {
@@ -30,10 +29,10 @@ const confirmUsageOfPreviousUser = () => {
 const askUsername = () => {
     term("Enter your username: ");
     term.inputField((error, input) => {
-        errorGaurd(error);
+        errorGuard(error);
         store.dispatch(
             setUser({
-                user_id: uuidv4(),
+                user_id: generateUUID(),
                 username: safeString(input!),
             }),
         );
@@ -48,7 +47,7 @@ const askUsername = () => {
 const writeUserFile = () => {
     const { user_id, username } = userSelector();
     writeFile("mark-user.json", JSON.stringify({ user_id, username }), "utf8", (err) => {
-        errorGaurd(err);
+        errorGuard(err);
     });
 };
 

@@ -4,16 +4,25 @@ enum Windows {
     ROOM,
 }
 
+enum Teams {
+    A = "team_a",
+    B = "team_b",
+}
+
 type Player = {
     id: string;
     username: string;
 };
 
+type Team = [Player?, Player?];
+
 type Room = {
     id: string;
     name: string;
-    team_a: [Player?, Player?];
-    team_b: [Player?, Player?];
+    [Teams.A]: Team;
+    [Teams.B]: Team;
 };
 
-export { Windows, Player, Room };
+// type teamName = {[b in keyof Room]: any}[number];
+
+export { Windows, Player, Room, Team, Teams };

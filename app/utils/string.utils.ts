@@ -1,5 +1,7 @@
-const safeString = (value: string): string => {
-    return value.replace(/[^a-zA-Z0-9]/g, "");
-};
+import { v4 as uuidv4 } from "uuid";
 
-export { safeString };
+const safeString = (value: string): string => value.replace(/[^a-zA-Z0-9]/g, "");
+
+const generateUUID = (): string => uuidv4();
+
+export { safeString, generateUUID };

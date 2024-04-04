@@ -1,19 +1,32 @@
 import { navigate } from "@utils/navigation";
-import { Windows } from "@utils/types";
+import { Teams, Windows } from "@utils/types";
+import { dispatch } from "@store/store";
+import { selectTeamInSelectedRoom, unSelectTeamInSelectedRoom } from "@store/rooms/actions";
+import { renderSeatsInRoom } from "@windows/rooms/index";
+import { setSelectedRoom } from "@store/user/userSlice";
 
-const handleRoomsInputs = (key) => {
+const handleRoomsInputs = (key: string) => {
     switch (key) {
         case "r":
             // create room
             break;
         case "c":
+            dispatch(setSelectedRoom(""));
             navigate(Windows.ROOMS);
             break;
-        case "b":
-            // select team b
+        case "u":
+            unSelectTeamInSelectedRoom();
+            renderSeatsInRoom();
             break;
+        case "2":
+        case "b":
+            selectTeamInSelectedRoom(Teams.B);
+            renderSeatsInRoom();
+            break;
+        case "1":
         case "a":
-            // select team a
+            selectTeamInSelectedRoom(Teams.A);
+            renderSeatsInRoom();
             break;
         default:
             break;

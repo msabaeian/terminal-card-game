@@ -1,6 +1,6 @@
 import store from "@store/store";
 import { Windows } from "./types";
-import { setActiveWindow } from "@store/userSlice";
+import { setActiveWindow } from "@store/user/userSlice";
 import { clearTerminal } from "./terminal";
 import { terminal as term } from "terminal-kit";
 import authWindow from "@windows/auth";

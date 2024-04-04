@@ -1,9 +1,9 @@
 import { terminal as term } from "terminal-kit";
 import { terminateTerminal } from "./terminal";
-import { userSelector } from "@store/selectors";
 import { Windows } from "./types";
 import handleRoomInputs from "@windows/room/input.handler";
 import handleRoomsInputs from "@windows/rooms/input.handler";
+import { userSelector } from "@store/user/selectors";
 
 const handleInputs = (key) => {
     switch (key) {
