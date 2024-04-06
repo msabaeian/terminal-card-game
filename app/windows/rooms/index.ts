@@ -1,18 +1,19 @@
-import { clearTerminal, errorGuard } from "@utils/terminal";
+import { clearTerminal, errorGuard, input } from "@utils/terminal";
 import { Player, Room, Teams, Windows } from "@utils/types";
 import { terminal as term } from "terminal-kit";
 import { dispatch } from "@store/store";
-import { setRooms } from "@store/rooms/roomsSlice";
-import { ROOMS_MOCK } from "@windows/rooms/mocks";
 import { roomsSelector } from "@store/rooms/selectors";
-import { setSelectedRoom } from "@store/user/userSlice";
+import { setActivePane, setSelectedRoom } from "@store/user/userSlice";
 import { navigate } from "@utils/navigation";
+import { createRoom } from "@windows/rooms/actions";
+import { RoomPanes, RoomsInputKeys } from "@windows/rooms/types";
 
 const roomsWindow = () => {
-    dispatch(setRooms(ROOMS_MOCK));
     const { rooms } = roomsSelector();
 
-    term.yellow("Up/Down: navigate, Enter: open a room, C: create a room, Q/CRTL+C: exit game\n");
+    term.yellow(
+        `Up/Down: navigate, Enter: open a room, ${RoomsInputKeys.CREATE_ROOM}: create a room, Q/CRTL+C: exit game\n`,
+    );
 
     term.singleColumnMenu(
         rooms.map((item) => `${item.name} - [${roomPlayersCount(item)}/4]`),
@@ -20,19 +21,32 @@ const roomsWindow = () => {
             errorGuard(error);
             const selectedOption = rooms[response.selectedIndex];
             dispatch(setSelectedRoom(selectedOption.id));
-            renderSeatsInRoom();
+            seatsInRoomPane();
         },
     );
 };
 
-const renderSeatsInRoom = () => {
+const seatsInRoomPane = () => {
     clearTerminal();
-    term.yellow("Up/Down: navigate, A/1: select team A, B/2: select team B, C: cancel and back, U: unselect team, Q/CRTL+C: exit game\n");
-    term.cyan(`Select your team/seat in room ${"(room name must be here)"}: \n\n`);
+    dispatch(setActivePane(RoomPanes.SELECT_SEAT));
     const { selectedRoom } = roomsSelector();
+
+    term.yellow(
+        `Up/Down: navigate,${RoomsInputKeys.SELECT_TEAM_A}: select team A, ${RoomsInputKeys.SELECT_TEAM_B}: select team B, ${RoomsInputKeys.CANCEL_SEAT_SELECTION}: cancel and back, ${RoomsInputKeys.UNSELECT_SEAT}: unselect team, Q/CRTL+C: exit game\n`,
+    );
+
     if (selectedRoom) {
-        term.bgBlue.bold.white(`Team A:`).bgDefaultColor(` ${renderPlayerName(selectedRoom[Teams.A][0])} - ${renderPlayerName(selectedRoom[Teams.A][1])}\n`);
-        term.bgYellow.bold(`Team B:`).bgDefaultColor(` ${renderPlayerName(selectedRoom[Teams.B][0])} - ${renderPlayerName(selectedRoom[Teams.B][1])}\n`);
+        term.cyan(`Select your team/seat in room ${selectedRoom.name}: \n\n`);
+        term.bgBlue.bold
+            .white(`Team A:`)
+            .bgDefaultColor(
+                ` ${getPlayerName(selectedRoom[Teams.A][0])} - ${getPlayerName(selectedRoom[Teams.A][1])}\n`,
+            );
+        term.bgYellow
+            .bold(`Team B:`)
+            .bgDefaultColor(
+                ` ${getPlayerName(selectedRoom[Teams.B][0])} - ${getPlayerName(selectedRoom[Teams.B][1])}\n`,
+            );
     } else {
         navigate(Windows.ROOMS);
     }
@@ -50,13 +64,24 @@ const renderSeatsInRoom = () => {
     // }, 2000);
 };
 
-const roomPlayersCount = (room: Room): number => {
-    return room.team_a.filter((i) => i !== undefined).length + room.team_b.filter((i) => i !== undefined).length;
+const createRoomPane = async () => {
+    dispatch(setActivePane(RoomPanes.CREATE_ROOM));
+    const roomName = await input({
+        message: "Enter your desired room name: ",
+        required: true,
+    });
+    const createdRoomId = await createRoom(roomName);
+    dispatch(setSelectedRoom(createdRoomId));
+    seatsInRoomPane();
 };
 
-const renderPlayerName = (player: Player | undefined) => {
+const roomPlayersCount = (room: Room): number => {
+    return room.team_a.filter((i) => i).length + room.team_b.filter((i) => i).length;
+};
+
+const getPlayerName = (player: Player | undefined) => {
     return player?.username ?? "[EMPTY]";
 };
 
-export { renderSeatsInRoom };
+export { seatsInRoomPane, createRoomPane };
 export default roomsWindow;

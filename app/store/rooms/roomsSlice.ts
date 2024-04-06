@@ -23,8 +23,14 @@ const roomsSlice = createSlice({
                 changes: action.payload.data,
             });
         },
+        addRoom: (state, action: PayloadAction<Room>) => {
+            roomsAdapter.addOne(state.rooms, action.payload);
+        },
+        removeRoom: (state, action: PayloadAction<string>) => {
+            roomsAdapter.removeOne(state.rooms, action.payload);
+        },
     },
 });
 
-export const { setRooms, setRoom } = roomsSlice.actions;
+export const { setRooms, setRoom, addRoom, removeRoom } = roomsSlice.actions;
 export default roomsSlice.reducer;

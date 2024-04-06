@@ -1,10 +1,11 @@
 import { dispatch } from "@store/store";
-import { setRoom } from "@store/rooms/roomsSlice";
+import { removeRoom, setRoom } from "@store/rooms/roomsSlice";
 import { userSelector } from "@store/user/selectors";
 import { roomsSelector } from "@store/rooms/selectors";
 import { deepCopy } from "@utils/object.utils";
-import { setSelectedTeam } from "@store/user/userSlice";
-import { Teams } from "@utils/types";
+import { setSelectedRoom, setSelectedTeam } from "@store/user/userSlice";
+import { Teams, Windows } from "@utils/types";
+import { navigate } from "@utils/navigation";
 
 const selectTeamInSelectedRoom = (teamKey: Teams) => {
     const { user_id, username, selectedTeam } = userSelector();
@@ -13,7 +14,7 @@ const selectTeamInSelectedRoom = (teamKey: Teams) => {
     }
 
     const { selectedRoom } = roomsSelector();
-    if (selectedRoom) {
+    if (selectedRoom && selectedRoom.owner_id !== user_id) {
         let updatedRoom = deepCopy(selectedRoom);
 
         if (!updatedRoom[teamKey][0]) {
@@ -40,16 +41,16 @@ const selectTeamInSelectedRoom = (teamKey: Teams) => {
 };
 
 const unSelectTeamInSelectedRoom = () => {
-    const { selectedTeam, username } = userSelector();
+    const { selectedTeam, username, user_id } = userSelector();
     const { selectedRoom } = roomsSelector();
 
-    if (selectedRoom) {
+    if (selectedTeam && selectedRoom && selectedRoom.owner_id !== user_id) {
         let updatedRoom = deepCopy(selectedRoom);
 
-        if (updatedRoom[selectedTeam!][0]!.username === username) {
-            updatedRoom[selectedTeam!][0] = undefined;
-        } else if (updatedRoom[selectedTeam!][1]!.username === username) {
-            updatedRoom[selectedTeam!][1] = undefined;
+        if (updatedRoom[selectedTeam][0]?.username === username) {
+            updatedRoom[selectedTeam][0] = undefined;
+        } else if (updatedRoom[selectedTeam][1]?.username === username) {
+            updatedRoom[selectedTeam][1] = undefined;
         }
 
         dispatch(setSelectedTeam(null));
@@ -63,4 +64,19 @@ const unSelectTeamInSelectedRoom = () => {
     }
 };
 
-export { selectTeamInSelectedRoom, unSelectTeamInSelectedRoom };
+const cancelSeatSelection = () => {
+    const { selectedRoom } = roomsSelector();
+    const { user_id } = userSelector();
+
+    if (selectedRoom) {
+        if (selectedRoom.owner_id === user_id) {
+            dispatch(removeRoom(selectedRoom.id));
+        }
+        unSelectTeamInSelectedRoom();
+
+        dispatch(setSelectedRoom(""));
+        navigate(Windows.ROOMS);
+    }
+};
+
+export { selectTeamInSelectedRoom, unSelectTeamInSelectedRoom, cancelSeatSelection };

@@ -1,16 +1,19 @@
-import store from "@store/store";
+import store, { dispatch } from "@store/store";
 import { setUser } from "@store/user/userSlice";
 import { navigate } from "@utils/navigation";
-import { generateUUID, safeString } from "@utils/string.utils";
-import { clearTerminal, errorGuard } from "@utils/terminal";
+import { generateUUID } from "@utils/string.utils";
+import { errorGuard, input } from "@utils/terminal";
 import { Windows } from "@utils/types";
 import { readFile, writeFile } from "node:fs";
 import { terminal as term } from "terminal-kit";
 import { userSelector } from "@store/user/selectors";
+import { setRooms } from "@store/rooms/roomsSlice";
+import { ROOMS_MOCK } from "@windows/rooms/mocks";
 
 const authWindow = () => {
     term.green("Welcome to very first version of Mark Dezfuli!\n");
     readUserFile();
+    dispatch(setRooms(ROOMS_MOCK));
 };
 
 const confirmUsageOfPreviousUser = () => {
@@ -26,22 +29,22 @@ const confirmUsageOfPreviousUser = () => {
     });
 };
 
-const askUsername = () => {
-    term("Enter your username: ");
-    term.inputField((error, input) => {
-        errorGuard(error);
-        store.dispatch(
-            setUser({
-                user_id: generateUUID(),
-                username: safeString(input!),
-            }),
-        );
-        clearTerminal();
-        writeUserFile();
-        term.green("Excellent!!\n");
-        term("From now your username is '%s'\n", safeString(input!));
-        navigate(Windows.ROOMS);
+const askUsername = async () => {
+    const username = await input({
+        message: "Enter your username: ",
+        required: true,
     });
+
+    store.dispatch(
+        setUser({
+            user_id: generateUUID(),
+            username: username,
+        }),
+    );
+    writeUserFile();
+    term.green("Excellent!!\n");
+    term("From now your username is '%s'\n", username);
+    navigate(Windows.ROOMS);
 };
 
 const writeUserFile = () => {

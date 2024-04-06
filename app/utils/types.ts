@@ -19,6 +19,7 @@ type Team = [Player?, Player?];
 type Room = {
     id: string;
     name: string;
+    owner_id: string;
     [Teams.A]: Team;
     [Teams.B]: Team;
 };
