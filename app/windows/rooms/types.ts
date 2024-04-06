@@ -1,4 +1,4 @@
-enum RoomPanes {
+enum RoomScenes {
     CREATE_ROOM,
     SELECT_SEAT,
 }
@@ -11,4 +11,4 @@ enum RoomsInputKeys {
     SELECT_TEAM_A = "a",
 }
 
-export { RoomPanes, RoomsInputKeys };
+export { RoomScenes, RoomsInputKeys };

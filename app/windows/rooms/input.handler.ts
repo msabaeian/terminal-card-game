@@ -1,49 +1,49 @@
 import { navigate } from "@utils/navigation";
 import { Teams, Windows } from "@utils/types";
 import { cancelSeatSelection, selectTeamInSelectedRoom, unSelectTeamInSelectedRoom } from "@store/rooms/actions";
-import { createRoomPane, seatsInRoomPane } from "@windows/rooms/index";
+import { createRoomScene, seatsInRoomScene } from "@windows/rooms/index";
 import { userSelector } from "@store/user/selectors";
-import { RoomPanes, RoomsInputKeys } from "@windows/rooms/types";
+import { RoomScenes, RoomsInputKeys } from "@windows/rooms/types";
 
 const handleRoomsInputs = (key: string) => {
-    const { activePane } = userSelector();
+    const { activeScene } = userSelector();
 
-    switch (activePane) {
+    switch (activeScene) {
         case null:
-            return handleMainPane(key);
-        case RoomPanes.SELECT_SEAT:
-            return handleInputsForSelectSeatPane(key);
+            return handleMainScene(key);
+        case RoomScenes.SELECT_SEAT:
+            return handleInputsForSelectSeatScene(key);
         default:
             break;
     }
 };
 
-const handleMainPane = (key: string) => {
+const handleMainScene = (key: string) => {
     switch (key) {
         case RoomsInputKeys.CREATE_ROOM:
-            createRoomPane();
+            createRoomScene();
             break;
         default:
             break;
     }
 };
 
-const handleInputsForSelectSeatPane = (key: string) => {
+const handleInputsForSelectSeatScene = (key: string) => {
     switch (key) {
         case RoomsInputKeys.CANCEL_SEAT_SELECTION:
             cancelSeatSelection();
             break;
         case RoomsInputKeys.UNSELECT_SEAT: // for unselect
             unSelectTeamInSelectedRoom();
-            seatsInRoomPane();
+            seatsInRoomScene();
             break;
         case RoomsInputKeys.SELECT_TEAM_B:
             selectTeamInSelectedRoom(Teams.B);
-            seatsInRoomPane();
+            seatsInRoomScene();
             break;
         case RoomsInputKeys.SELECT_TEAM_A:
             selectTeamInSelectedRoom(Teams.A);
-            seatsInRoomPane();
+            seatsInRoomScene();
             break;
         // TODO: delete this
         case RoomsInputKeys.START_GAME: // for start

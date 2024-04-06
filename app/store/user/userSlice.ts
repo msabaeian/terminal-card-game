@@ -5,7 +5,7 @@ type SliceType = {
     user_id: string;
     username: string;
     activeWindow: Windows;
-    activePane: number | null;
+    activeScene: number | null;
     selectedRoomId: string | null;
     selectedTeam: Teams | null;
 };
@@ -14,7 +14,7 @@ const initialState: SliceType = {
     user_id: "",
     username: "",
     activeWindow: Windows.AUTH,
-    activePane: null,
+    activeScene: null,
     selectedRoomId: null,
     selectedTeam: null,
 };
@@ -29,10 +29,10 @@ const userSlice = createSlice({
         },
         setActiveWindow(state, action: PayloadAction<Windows>) {
             state.activeWindow = action.payload;
-            state.activePane = null;
+            state.activeScene = null;
         },
-        setActivePane(state, action: PayloadAction<number | null>) {
-            state.activePane = action.payload;
+        setActiveScene(state, action: PayloadAction<number | null>) {
+            state.activeScene = action.payload;
         },
         setSelectedRoom: (state, action: PayloadAction<SliceType["selectedRoomId"]>) => {
             state.selectedRoomId = action.payload;
@@ -44,5 +44,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser, setActiveWindow, setSelectedRoom, setActivePane, setSelectedTeam } = userSlice.actions;
+export const { setUser, setActiveWindow, setSelectedRoom, setActiveScene, setSelectedTeam } = userSlice.actions;
 export default userSlice.reducer;

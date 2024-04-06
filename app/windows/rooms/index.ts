@@ -3,10 +3,10 @@ import { Player, Room, Teams, Windows } from "@utils/types";
 import { terminal as term } from "terminal-kit";
 import { dispatch } from "@store/store";
 import { roomsSelector } from "@store/rooms/selectors";
-import { setActivePane, setSelectedRoom } from "@store/user/userSlice";
+import { setActiveScene, setSelectedRoom } from "@store/user/userSlice";
 import { navigate } from "@utils/navigation";
 import { createRoom } from "@windows/rooms/actions";
-import { RoomPanes, RoomsInputKeys } from "@windows/rooms/types";
+import { RoomScenes, RoomsInputKeys } from "@windows/rooms/types";
 
 const roomsWindow = () => {
     const { rooms } = roomsSelector();
@@ -21,14 +21,14 @@ const roomsWindow = () => {
             errorGuard(error);
             const selectedOption = rooms[response.selectedIndex];
             dispatch(setSelectedRoom(selectedOption.id));
-            seatsInRoomPane();
+            seatsInRoomScene();
         },
     );
 };
 
-const seatsInRoomPane = () => {
+const seatsInRoomScene = () => {
     clearTerminal();
-    dispatch(setActivePane(RoomPanes.SELECT_SEAT));
+    dispatch(setActiveScene(RoomScenes.SELECT_SEAT));
     const { selectedRoom } = roomsSelector();
 
     term.yellow(
@@ -64,15 +64,15 @@ const seatsInRoomPane = () => {
     // }, 2000);
 };
 
-const createRoomPane = async () => {
-    dispatch(setActivePane(RoomPanes.CREATE_ROOM));
+const createRoomScene = async () => {
+    dispatch(setActiveScene(RoomScenes.CREATE_ROOM));
     const roomName = await input({
         message: "Enter your desired room name: ",
         required: true,
     });
     const createdRoomId = await createRoom(roomName);
     dispatch(setSelectedRoom(createdRoomId));
-    seatsInRoomPane();
+    seatsInRoomScene();
 };
 
 const roomPlayersCount = (room: Room): number => {
@@ -83,5 +83,5 @@ const getPlayerName = (player: Player | undefined) => {
     return player?.username ?? "[EMPTY]";
 };
 
-export { seatsInRoomPane, createRoomPane };
+export { seatsInRoomScene, createRoomScene };
 export default roomsWindow;
