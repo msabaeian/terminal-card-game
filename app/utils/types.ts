@@ -24,6 +24,10 @@ type Room = {
     [Teams.B]: Team;
 };
 
+type Cordinate = {
+    x: number;
+    y: number;
+};
 // type teamName = {[b in keyof Room]: any}[number];
 
-export { Windows, Player, Room, Team, Teams };
+export { Windows, Player, Room, Team, Teams, Cordinate };

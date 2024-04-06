@@ -1,7 +1,11 @@
-import { terminal as term } from "terminal-kit";
-import { navigate } from "@utils/navigation";
-import { Windows } from "@utils/types";
+import { ScreenBuffer, terminal as term } from "terminal-kit";
 import { safeString } from "@utils/string.utils";
+
+let viewport = new ScreenBuffer({
+    dst: term,
+    width: term.width,
+    height: term.height,
+});
 
 const clearTerminal = () => {
     term.clear();
@@ -20,7 +24,12 @@ const errorGuard = (error: any) => {
     }
 };
 
-const input = (opt: { message: string; clearBeforeInput?: boolean; clearAfterResponse?: boolean; required?: boolean }) => {
+const input = (opt: {
+    message: string;
+    clearBeforeInput?: boolean;
+    clearAfterResponse?: boolean;
+    required?: boolean;
+}) => {
     return new Promise<string>((resolve) => {
         const { message, clearAfterResponse = true, clearBeforeInput = true, required = false } = opt;
 
@@ -43,4 +52,4 @@ const input = (opt: { message: string; clearBeforeInput?: boolean; clearAfterRes
     });
 };
 
-export { clearTerminal, terminateTerminal, errorGuard, input };
+export { clearTerminal, terminateTerminal, errorGuard, input, viewport };

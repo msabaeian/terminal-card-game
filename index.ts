@@ -6,7 +6,6 @@ import { Windows } from "@utils/types";
 
 const main = () => {
     navigate(Windows.AUTH);
-    // register key listener
 };
 
 main();

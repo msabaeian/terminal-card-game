@@ -1,4 +1,4 @@
-import store, { dispatch } from "@store/store";
+import store from "@store/store";
 import { setUser } from "@store/user/userSlice";
 import { navigate } from "@utils/navigation";
 import { generateUUID } from "@utils/string.utils";
@@ -7,13 +7,12 @@ import { Windows } from "@utils/types";
 import { readFile, writeFile } from "node:fs";
 import { terminal as term } from "terminal-kit";
 import { userSelector } from "@store/user/selectors";
-import { setRooms } from "@store/rooms/roomsSlice";
-import { ROOMS_MOCK } from "@windows/rooms/mocks";
 
 const authWindow = () => {
-    term.green("Welcome to very first version of Mark Dezfuli!\n");
-    readUserFile();
-    dispatch(setRooms(ROOMS_MOCK));
+    navigate(Windows.ROOM);
+    // term.green("Welcome to very first version of Mark Dezfuli!\n");
+    // readUserFile();
+    // dispatch(setRooms(ROOMS_MOCK));
 };
 
 const confirmUsageOfPreviousUser = () => {
