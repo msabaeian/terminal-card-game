@@ -77,6 +77,26 @@ class Pane {
             x: this.bottomCenter.x,
             y: this.leftCenter.y,
         };
+
+        this.bottomMidCenter = {
+            x: this.center.x,
+            y: this.center.y + Math.round(this.center.y / 4),
+        };
+
+        this.topMidCenter = {
+            x: this.center.x,
+            y: this.center.y - Math.round(this.center.y / 4),
+        };
+
+        this.leftMidCenter = {
+            x: this.leftCenter.x + Math.round(width / 4),
+            y: this.leftCenter.y,
+        };
+
+        this.rightMidCenter = {
+            x: this.rightCenter.x - Math.round(width / 4),
+            y: this.rightCenter.y,
+        };
     }
 
     public clear = () => {

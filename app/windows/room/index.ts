@@ -17,6 +17,7 @@ const roomWindow = () => {
     playerCardsPane.drawCover();
     drawPlayerNames();
     drawPlayerCards();
+    drawEachPlayerSelectedCard();
     askMove();
 };
 
@@ -112,5 +113,27 @@ const askMove = async () => {
     });
     questionPane.clear();
     askMove();
+};
+
+const drawEachPlayerSelectedCard = () => {
+    term.saveCursor();
+
+    // top player card
+    term.moveTo(tablePane.topMidCenter.x, tablePane.topMidCenter.y);
+    term("3❤");
+
+    // right player card
+    term.moveTo(tablePane.rightMidCenter.x, tablePane.rightMidCenter.y);
+    term("8❤");
+
+    // left player card
+    term.moveTo(tablePane.leftMidCenter.x, tablePane.leftMidCenter.y);
+    term("10❤");
+
+    // bottom player card
+    term.moveTo(tablePane.bottomMidCenter.x, tablePane.bottomMidCenter.y);
+    term("Q♣");
+
+    term.restoreCursor();
 };
 export default roomWindow;
