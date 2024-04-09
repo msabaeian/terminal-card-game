@@ -5,13 +5,13 @@
     "license": "MIT",
     "scripts": {
         "build": "npx tsc",
-        "start": "yarn build && node dist/index.js",
+        "build:applyPatch": "npx tspc",
+        "start": "yarn build:applyPatch && node dist/index.js",
         "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
     },
     "dependencies": {
         "@reduxjs/toolkit": "^2.2.3",
         "dotenv": "^16.4.5",
-        "module-alias": "^2.2.3",
         "socket.io-client": "^4.7.5",
         "terminal-kit": "^3.1.1",
         "uuid": "^9.0.1"
@@ -20,15 +20,12 @@
         "@types/node": "^20.12.2",
         "@types/terminal-kit": "^2.5.6",
         "@types/uuid": "^9.0.8",
+        "add": "^2.0.6",
         "concurrently": "^8.2.2",
         "nodemon": "^3.1.0",
         "prettier": "3.2.5",
-        "typescript": "^5.4.3"
-    },
-    "_moduleAliases": {
-        "@app": "./dist",
-        "@store": "./dist/app/store/",
-        "@utils": "./dist/app/utils/",
-        "@windows": "./dist/app/windows/"
+        "ts-patch": "^3.1.2",
+        "typescript": "^5.4.3",
+        "typescript-transform-paths": "^3.4.7"
     }
 }
