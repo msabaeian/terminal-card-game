@@ -1,23 +1,18 @@
 import { terminal as term } from "terminal-kit";
-import { errorGuard, input, viewport } from "@utils/terminal";
+import { input, viewport } from "@utils/terminal";
 import Pane from "@utils/pane";
-import { RoomsInputKeys } from "@windows/rooms/types";
 
 const tablePane = new Pane({ x: 0, y: 2 }, viewport.width, viewport.height - 6);
-const playerCardsPane = new Pane({ x: tablePane.bottomLeft.x, y: tablePane.bottomLeft.y + 1 }, viewport.width, 1);
-const questionPane = new Pane(
-    { x: playerCardsPane.bottomLeft.x, y: playerCardsPane.bottomLeft.y + 1 },
-    viewport.width,
-    1,
-);
+const handPane = new Pane({ x: tablePane.bottomLeft.x, y: tablePane.bottomLeft.y + 1 }, viewport.width, 1);
+const questionPane = new Pane({ x: handPane.bottomLeft.x, y: handPane.bottomLeft.y + 1 }, viewport.width, 1);
 
 const roomWindow = () => {
     term.yellow(`Q/CRTL+C: exit game\n`);
     tablePane.drawCover();
-    playerCardsPane.drawCover();
+    handPane.drawCover();
     drawPlayerNames();
-    drawPlayerCards();
-    drawEachPlayerSelectedCard();
+    drawHand();
+    drawEachPlayerMove();
     askMove();
 };
 
@@ -89,13 +84,13 @@ const drawPlayerNames = () => {
     term.restoreCursor();
 };
 
-const drawPlayerCards = () => {
+const drawHand = () => {
     term.saveCursor();
-    playerCardsPane.clear();
-    term.moveTo(playerCardsPane.topLeft.x, playerCardsPane.topLeft.y)("Your Cards: ");
+    handPane.clear();
+    term.moveTo(handPane.topLeft.x, handPane.topLeft.y)("Your Cards: ");
     term.red("10❤:1 8❤:2 A❤:3 S❤:4");
     term.yellow(" | ");
-    term.black("7♣:5 9♣:6 Q♣:7 K♣:8");
+    term.black("7♣:5 9♠:6 Q♣:7 K♣:8");
     term.yellow(" | ");
     term.red("7♦:9 6♦:10 2♦:11 J♦:12");
     term.yellow(" | ");
@@ -115,7 +110,7 @@ const askMove = async () => {
     askMove();
 };
 
-const drawEachPlayerSelectedCard = () => {
+const drawEachPlayerMove = () => {
     term.saveCursor();
 
     // top player card
