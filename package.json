@@ -5,10 +5,12 @@
     "license": "MIT",
     "scripts": {
         "build": "npx tsc",
-        "build:applyPatch": "npx tspc",
-        "start": "yarn build:applyPatch && node dist/index.js",
+        "build:patch": "npx tspc",
+        "build:executable": "yarn build:patch && pkg package.json",
+        "start": "yarn build:patch && node dist/index.js",
         "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
     },
+    "bin": "./dist/index.js",
     "dependencies": {
         "@reduxjs/toolkit": "^2.2.3",
         "dotenv": "^16.4.5",
@@ -27,5 +29,14 @@
         "ts-patch": "^3.1.2",
         "typescript": "^5.4.3",
         "typescript-transform-paths": "^3.4.7"
+    },
+    "pkg": {
+        "scripts": "dist/**/*.js",
+        "assets": "node_modules/terminal-kit/lib/**/*",
+        "targets": [
+            "macos",
+            "win"
+        ],
+        "outputPath": "build"
     }
 }
