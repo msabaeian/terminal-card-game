@@ -1,4 +1,4 @@
-import store, { dispatch } from "@store/store";
+import { dispatch } from "@store/store";
 import { setUser } from "@store/user/userSlice";
 import { navigate } from "@utils/navigation";
 import { generateUUID } from "@utils/string.utils";
@@ -9,12 +9,16 @@ import { terminal as term } from "terminal-kit";
 import { userSelector } from "@store/user/selectors";
 import { setRooms } from "@store/rooms/roomsSlice";
 import { ROOMS_MOCK } from "@windows/rooms/mocks";
+import { PLAYERS_MOCK, setMockGame } from "@windows/game/mocks";
 
 const authWindow = () => {
-    // navigate(Windows.ROOM);
     term.green("Welcome to very first version of Mark Dezfuli!\n");
     readUserFile();
     dispatch(setRooms(ROOMS_MOCK));
+    setMockGame();
+    setTimeout(() => {
+        navigate(Windows.ROOM);
+    }, 1000);
 };
 
 const confirmUsageOfPreviousUser = () => {
@@ -36,7 +40,7 @@ const askUsername = async () => {
         required: true,
     });
 
-    store.dispatch(
+    dispatch(
         setUser({
             user_id: generateUUID(),
             username: username,
@@ -63,13 +67,13 @@ const readUserFile = () => {
 
         const userFileData = JSON.parse(data);
         if (userFileData.username && userFileData.user_id) {
-            store.dispatch(
+            dispatch(
                 setUser({
                     user_id: userFileData.user_id,
                     username: userFileData.username,
                 }),
             );
-            confirmUsageOfPreviousUser();
+            // confirmUsageOfPreviousUser();
         } else {
             askUsername();
         }

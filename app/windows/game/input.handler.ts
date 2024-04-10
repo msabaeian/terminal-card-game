@@ -1,7 +1,7 @@
 import { terminal as term } from "terminal-kit";
 import { terminateTerminal } from "@utils/terminal";
 
-const handleRoomInputs = (key) => {
+const handleGameInputs = (key) => {
     switch (key) {
         case "UP":
             term.up(1);
@@ -24,4 +24,4 @@ const handleRoomInputs = (key) => {
     }
 };
 
-export default handleRoomInputs;
+export default handleGameInputs;

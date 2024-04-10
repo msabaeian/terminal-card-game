@@ -10,7 +10,6 @@ enum Teams {
 }
 
 enum GameStages {
-    FIRST_DEAL,
     BET,
     DEAL,
     DROP,
@@ -33,6 +32,7 @@ type GamePlayerAction =
           suit: CardSuits;
           value: number;
       };
+
 interface Player {
     id: string;
     username: string;
@@ -40,7 +40,7 @@ interface Player {
 
 interface GamePlayer extends Player {
     isTurn: boolean;
-    action: GamePlayerAction;
+    action: GamePlayerAction | null;
 }
 
 type Team = [Player?, Player?];
@@ -83,37 +83,24 @@ enum CardValues {
 
 export type ValueOf<T> = T[keyof T];
 
-// const CardSuits = {
-//     HEARTS: "HEARTS",
-//     DIAMONDS: "DIAMONDS",
-//     CLUBS: "CLUBS",
-//     SPADES: "SPADES",
-// } as const;
-//
-// const CardValues = {
-//     TWO: 2,
-//     THREE: 3,
-//     FOUR: 4,
-//     FIVE: 5,
-//     SIX: 6,
-//     SEVEN: 7,
-//     EIGHT: 8,
-//     NINE: 9,
-//     TEN: 10,
-//     JACK: 11,
-//     QUEEN: 12,
-//     KING: 13,
-//     ACE: 14,
-// } as const;
-
 type Card = {
+    // id: string;
     type: CardSuits;
     value: CardValues;
-    appearance: "❤" | "♣" | "♦" | "♠";
+    played: boolean;
 };
 
-// type Deck = `${ValueOf<typeof CardSuits>}_${ValueOf<typeof CardValues>}`;
-
-// type teamName = {[b in keyof Room]: any}[number];
-
-export { Windows, Player, Room, Team, Teams, Cordinate, GameStages, GamePlayer };
+export {
+    Windows,
+    Player,
+    Room,
+    Team,
+    Teams,
+    Cordinate,
+    GameStages,
+    GamePlayer,
+    GamePlayerAction,
+    Card,
+    CardSuits,
+    CardValues,
+};

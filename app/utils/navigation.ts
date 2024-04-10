@@ -5,7 +5,7 @@ import { clearTerminal } from "./terminal";
 import { terminal as term } from "terminal-kit";
 import authWindow from "@windows/auth";
 import roomsWindow from "@windows/rooms";
-import roomWindow from "@windows/room";
+import gameWindow from "@windows/game";
 
 const navigate = (value: Windows) => {
     clearTerminal();
@@ -18,7 +18,7 @@ const navigate = (value: Windows) => {
             roomsWindow();
             break;
         case Windows.ROOM:
-            roomWindow();
+            gameWindow();
             break;
         default:
             term.red(`window ${Windows[value]} has not been defined yet\n`);

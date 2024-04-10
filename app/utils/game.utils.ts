@@ -1,5 +1,6 @@
 import { State as GameState } from "@store/game/gameSlice";
 import { gameSelector } from "@store/game/selectors";
+import { Card, CardSuits } from "./types";
 
 const getPlayerKeyInGame = (
     userId: string,
@@ -20,4 +21,16 @@ const getPlayerKeyInGame = (
     }
 };
 
-export { getPlayerKeyInGame };
+const suiteSymbol = (type: CardSuits): string => {
+    const symbol = {
+        [CardSuits.CLUBS]: "♣",
+        [CardSuits.DIAMONDS]: "♦",
+        [CardSuits.HEARTS]: "❤",
+        [CardSuits.SPADES]: "♠",
+    };
+    return symbol[type];
+};
+
+const generateCardId = (card: Pick<Card, "type" | "value">) => `${card.type}-${card.value}`;
+
+export { getPlayerKeyInGame, suiteSymbol, generateCardId };

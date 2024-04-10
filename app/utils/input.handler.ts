@@ -1,7 +1,7 @@
 import { terminal as term } from "terminal-kit";
 import { terminateTerminal } from "./terminal";
 import { Windows } from "./types";
-import handleRoomInputs from "@windows/room/input.handler";
+import handleGameInputs from "@windows/game/input.handler";
 import handleRoomsInputs from "@windows/rooms/input.handler";
 import { userSelector } from "@store/user/selectors";
 
@@ -20,7 +20,7 @@ const handleInputs = (key) => {
     const { activeWindow } = userSelector();
     switch (activeWindow) {
         case Windows.ROOM:
-            handleRoomInputs(key);
+            handleGameInputs(key);
             break;
         case Windows.ROOMS:
             handleRoomsInputs(key);
