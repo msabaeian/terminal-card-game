@@ -15,8 +15,8 @@ const authWindow = () => {
     term.green("Welcome to very first version of Mark Dezfuli!\n");
     readUserFile();
     dispatch(setRooms(ROOMS_MOCK));
-    setMockGame();
     setTimeout(() => {
+        setMockGame();
         navigate(Windows.ROOM);
     }, 1000);
 };

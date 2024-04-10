@@ -1,6 +1,6 @@
 import { State as GameState } from "@store/game/gameSlice";
 import { gameSelector } from "@store/game/selectors";
-import { Card, CardSuits } from "./types";
+import { Card, CardSuits, GamePlayerAction, GamePlayerActionTypes } from "./types";
 
 const getPlayerKeyInGame = (
     userId: string,
@@ -33,4 +33,15 @@ const suiteSymbol = (type: CardSuits): string => {
 
 const generateCardId = (card: Pick<Card, "type" | "value">) => `${card.type}-${card.value}`;
 
-export { getPlayerKeyInGame, suiteSymbol, generateCardId };
+const playerMove = (action: GamePlayerAction) => {
+    if (action.type === GamePlayerActionTypes.PASS) {
+        return "PASS!";
+    } else if (action.type === GamePlayerActionTypes.DEAL) {
+        return "DEAL!";
+    } else if (action.type === GamePlayerActionTypes.RAISE) {
+        return "RAISE!";
+    }
+    return "";
+};
+
+export { getPlayerKeyInGame, suiteSymbol, generateCardId, playerMove };

@@ -1,4 +1,4 @@
-import { Card, GamePlayer, GamePlayerAction, GameStages } from "@utils/types";
+import { Card, CardSuits, GamePlayer, GamePlayerAction, GameStages } from "@utils/types";
 import { EntityState, PayloadAction, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { generateCardId, getPlayerKeyInGame } from "@utils/game.utils";
 import { RootState } from "@store/store";
@@ -10,6 +10,9 @@ type State = {
     playerLeft: GamePlayer | null;
     stage: GameStages;
     hand: EntityState<Card, string>;
+    selectedSuite: CardSuits;
+    betValue: number;
+    selectedBetValue: number;
 };
 
 export const handCardsAdapter = createEntityAdapter<Card, string>({
@@ -24,6 +27,9 @@ const initialState: State = {
     playerRight: null,
     playerTop: null,
     hand: handCardsAdapter.getInitialState(),
+    betValue: 85,
+    selectedSuite: CardSuits.HEARTS,
+    selectedBetValue: 85,
 };
 
 const gameSlice = createSlice({
@@ -52,10 +58,24 @@ const gameSlice = createSlice({
         addCards: (state, action: PayloadAction<Card[]>) => {
             handCardsAdapter.addMany(state.hand, action.payload);
         },
+        setSelectedCardSuite: (state, action: PayloadAction<CardSuits>) => {
+            state.selectedSuite = action.payload;
+        },
+        setSelectedBetValue: (state, action: PayloadAction<number>) => {
+            state.selectedBetValue = action.payload;
+        },
         resetState: () => initialState,
     },
 });
 
-export const { setGame, resetState, setPlayerAction, setPlayerTurn, addCards } = gameSlice.actions;
+export const {
+    setGame,
+    resetState,
+    setPlayerAction,
+    setPlayerTurn,
+    addCards,
+    setSelectedCardSuite,
+    setSelectedBetValue,
+} = gameSlice.actions;
 export type { State };
 export default gameSlice.reducer;

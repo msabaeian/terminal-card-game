@@ -4,8 +4,10 @@ import { CardSuits } from "@utils/types";
 
 const gameSelector = () => {
     const state = store.getState();
-    const { game } = state;
+    const { game, user } = state;
     const handCards = handCardSelector.selectAll(state);
+    const turnPlayer =
+        [game.playerTop, game.playerRight, game.playerBottom, game.playerLeft].find((pl) => pl?.isTurn) ?? null;
 
     return {
         ...state.game,
@@ -14,8 +16,8 @@ const gameSelector = () => {
         diamondsCards: handCards.filter((card) => card.type === CardSuits.DIAMONDS),
         spadesCards: handCards.filter((card) => card.type === CardSuits.SPADES),
         clubsCards: handCards.filter((card) => card.type === CardSuits.CLUBS),
-        turnPlayer:
-            [game.playerTop, game.playerRight, game.playerBottom, game.playerLeft].find((pl) => pl?.isTurn) ?? null,
+        turnPlayer,
+        isMyTurn: turnPlayer && turnPlayer.id === user.user_id,
     };
 };
 

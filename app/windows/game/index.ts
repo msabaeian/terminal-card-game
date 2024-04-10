@@ -2,11 +2,17 @@ import { terminal as term } from "terminal-kit";
 import { input, viewport } from "@utils/terminal";
 import Pane from "@utils/pane";
 import { gameSelector } from "@store/game/selectors";
-import { suiteSymbol } from "@utils/game.utils";
+import { playerMove, suiteSymbol } from "@utils/game.utils";
 import { CardSuits, GameStages } from "@utils/types";
+import { userSelector } from "@store/user/selectors";
 
 const infoPane = new Pane({ x: 0, y: 0 }, viewport.width, 2);
 const tablePane = new Pane({ x: 0, y: infoPane.bottomLeft.y }, viewport.width, viewport.height - 6);
+const movesPane = new Pane(
+    { x: tablePane.leftMidCenter.x - 5, y: tablePane.topMidCenter.y },
+    tablePane.rightMidCenter.x - tablePane.leftMidCenter.x + 10,
+    tablePane.bottomMidCenter.y - tablePane.topMidCenter.y,
+);
 const handPane = new Pane({ x: tablePane.bottomLeft.x, y: tablePane.bottomLeft.y + 1 }, viewport.width, 1);
 const actionPane = new Pane({ x: handPane.bottomLeft.x, y: handPane.bottomLeft.y + 1 }, viewport.width, 1);
 
@@ -16,8 +22,9 @@ const gameWindow = () => {
     handPane.drawCover();
     drawPlayerNames();
     drawHand();
-    // drawEachPlayerMove();
-    actionInput();
+    drawEachPlayerMove();
+    handleActionPane();
+    term.grabInput(true);
 };
 
 const writeInfo = () => {
@@ -28,7 +35,7 @@ const writeInfo = () => {
     term.yellow(`Q/CRTL+C: exit game`);
 
     if (stage === GameStages.BET) {
-        term.yellow(` Up/Bottom: Change Selected Suits`);
+        term.yellow(` - Right/Left: change selected suit - Up/Down: change bet value - P: pass`);
     }
 
     term.restoreCursor();
@@ -92,15 +99,13 @@ const drawPlayerNames = () => {
                 term.blue(playerBottom.username[i]);
             }
         }
-    } else {
-        term("hellioooooo\n");
     }
 
     term.restoreCursor();
 };
 
 const drawHand = () => {
-    const { heartsCards, clubsCards, diamondsCards, spadesCards } = gameSelector();
+    const { heartsCards, clubsCards, diamondsCards, spadesCards, selectedSuite } = gameSelector();
     term.saveCursor();
     handPane.clear();
     term.moveTo(handPane.topLeft.x, handPane.topLeft.y)("Your Cards: ");
@@ -129,38 +134,63 @@ const drawHand = () => {
     term.restoreCursor();
 };
 
-const actionInput = async () => {
-    term.moveTo(actionPane.topLeft.x, actionPane.topLeft.y);
-    const move = await input({
-        message: "What is your move? ",
-        clearBeforeInput: false,
-        clearAfterResponse: false,
-        required: true,
-    });
+const handleActionPane = async () => {
     actionPane.clear();
-    actionInput();
+    const { stage, selectedBetValue, selectedSuite, isMyTurn } = gameSelector();
+
+    if (!isMyTurn) return;
+
+    term.moveTo(actionPane.topLeft.x, actionPane.topLeft.y);
+
+    if (stage === GameStages.BET) {
+        term(`Your bet: ${selectedBetValue}${suiteSymbol(selectedSuite)}`);
+        return;
+    }
+
+    term(`stage=${stage} is not handled`);
+
+    // term.moveTo(actionPane.topLeft.x, actionPane.topLeft.y);
+    // const move = await input({
+    //     message: "What is your move? ",
+    //     clearBeforeInput: false,
+    //     clearAfterResponse: false,
+    //     required: true,
+    // });
+    // actionPane.clear();
+    // actionInput();
 };
 
 const drawEachPlayerMove = () => {
+    const { playerTop, playerBottom, playerLeft, playerRight } = gameSelector();
+    movesPane.clear();
     term.saveCursor();
 
     // top player card
-    term.moveTo(tablePane.topMidCenter.x, tablePane.topMidCenter.y);
-    term("3❤");
+    if (playerTop && playerTop.action) {
+        term.moveTo(tablePane.topMidCenter.x, tablePane.topMidCenter.y);
+        term(playerMove(playerTop.action));
+    }
 
     // right player card
-    term.moveTo(tablePane.rightMidCenter.x, tablePane.rightMidCenter.y);
-    term("8❤");
+    if (playerRight && playerRight.action) {
+        term.moveTo(tablePane.rightMidCenter.x, tablePane.rightMidCenter.y);
+        term(playerMove(playerRight.action));
+    }
 
     // left player card
-    term.moveTo(tablePane.leftMidCenter.x, tablePane.leftMidCenter.y);
-    term("10❤");
+    if (playerLeft && playerLeft.action) {
+        term.moveTo(tablePane.leftMidCenter.x, tablePane.leftMidCenter.y);
+        term(playerMove(playerLeft.action));
+    }
 
     // bottom player card
-    term.moveTo(tablePane.bottomMidCenter.x, tablePane.bottomMidCenter.y);
-    term("Q♣");
+    if (playerBottom && playerBottom.action) {
+        term.moveTo(tablePane.bottomMidCenter.x, tablePane.bottomMidCenter.y);
+        term(playerMove(playerBottom.action));
+    }
 
     term.restoreCursor();
 };
 
+export { handleActionPane, drawEachPlayerMove };
 export default gameWindow;

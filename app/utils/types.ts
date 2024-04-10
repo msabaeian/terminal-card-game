@@ -25,10 +25,10 @@ enum GamePlayerActionTypes {
 
 type GamePlayerAction =
     | {
-          type: Exclude<GamePlayerActionTypes, GamePlayerActionTypes.DEAL>;
+          type: Exclude<GamePlayerActionTypes, GamePlayerActionTypes.RAISE>;
       }
     | {
-          type: GamePlayerActionTypes.DEAL;
+          type: GamePlayerActionTypes.RAISE;
           suit: CardSuits;
           value: number;
       };
@@ -100,6 +100,7 @@ export {
     GameStages,
     GamePlayer,
     GamePlayerAction,
+    GamePlayerActionTypes,
     Card,
     CardSuits,
     CardValues,
