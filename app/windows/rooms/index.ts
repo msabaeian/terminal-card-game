@@ -12,7 +12,7 @@ const roomsWindow = () => {
     const { rooms } = roomsSelector();
 
     term.yellow(
-        `Up/Down: navigate, Enter: open a room, ${RoomsInputKeys.CREATE_ROOM}: create a room, Q/CRTL+C: exit game\n`,
+        `Up/Down: navigate, Enter: open a room, ${RoomsInputKeys.CREATE_ROOM}: create a room, ${RoomsInputKeys.START_GAME}: start game Q/CRTL+C: exit game\n`,
     );
 
     term.singleColumnMenu(

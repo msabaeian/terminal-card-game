@@ -1,5 +1,5 @@
 {
-    "name": "mark-player",
+    "name": "terminal-kit-card-player",
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
@@ -14,7 +14,6 @@
     "dependencies": {
         "@reduxjs/toolkit": "^2.2.3",
         "dotenv": "^16.4.5",
-        "socket.io-client": "^4.7.5",
         "terminal-kit": "^3.1.1",
         "uuid": "^9.0.1"
     },

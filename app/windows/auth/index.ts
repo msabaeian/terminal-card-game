@@ -9,19 +9,16 @@ import { terminal as term } from "terminal-kit";
 import { userSelector } from "@store/user/selectors";
 import { setRooms } from "@store/rooms/roomsSlice";
 import { ROOMS_MOCK } from "@windows/rooms/mocks";
-import { PLAYERS_MOCK, setMockGame } from "@windows/game/mocks";
+import { setMockGame } from "@windows/game/mocks";
 
 const authWindow = () => {
-    term.green("Welcome to very first version of Mark Dezfuli!\n");
+    term.green("Welcome to very first version of Card Game!\n");
     readUserFile();
     dispatch(setRooms(ROOMS_MOCK));
-    setTimeout(() => {
-        setMockGame();
-        navigate(Windows.ROOM);
-    }, 1000);
 };
 
 const confirmUsageOfPreviousUser = () => {
+    setMockGame();
     const { username } = userSelector();
     term.yellow("Found username '%s' do you want to login with this? [y|n]\n", username);
     term.yesOrNo({ yes: ["y", "ENTER"], no: ["n"] }, (error, result) => {
@@ -73,7 +70,7 @@ const readUserFile = () => {
                     username: userFileData.username,
                 }),
             );
-            // confirmUsageOfPreviousUser();
+            confirmUsageOfPreviousUser();
         } else {
             askUsername();
         }

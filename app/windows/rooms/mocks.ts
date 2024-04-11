@@ -11,7 +11,7 @@ const ROOMS_MOCK: Room[] = [
     },
     {
         id: generateUUID(),
-        name: "farzanegan",
+        name: "Goldenarea",
         owner_id: generateUUID(),
         team_a: [
             { id: generateUUID(), username: "javadyasari" },
@@ -21,7 +21,7 @@ const ROOMS_MOCK: Room[] = [
     },
     {
         id: generateUUID(),
-        name: "ansariDezzz",
+        name: "oostpark",
         owner_id: generateUUID(),
         team_a: [
             { id: generateUUID(), username: "khaled" },
@@ -31,7 +31,7 @@ const ROOMS_MOCK: Room[] = [
     },
     {
         id: generateUUID(),
-        name: "bachoon sahra bedar",
+        name: "challengers",
         owner_id: generateUUID(),
         team_a: [
             { id: generateUUID(), username: "khaled" },
